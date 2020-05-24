@@ -1,115 +1,143 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title><%= subTitle %>｜<%= title %></title>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-		<link rel="stylesheet/less" type="text/css" href="/stylesheets/styles.less">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-	</head>
-	<body id="page_send_nc">
-		<header>
-			<h1><%= title %></h1>
-		</header>
-		<main>
-			<section id="send_nc_form_section">
-				<h2><%= subTitle %></h2>
-				<dl id="send_nc_form">
-					<dt>送り主</dt>
-					<dd>
-						<div id="self_user_name_wrapper">
-							<span id="self_user_name"></span>
-							さん
-						</div>
-					</dd>
-					<dt>送り先</dt>
-					<dd id="send_user_name_wrapper">
-						<input type="text" id="send_user_name" disabled="disabled">
-						さん
-						<ul id="send_user_list"></ul>
-					</dd>
-					<dt>NC数</dt>
-					<dd>
-						<label for="send_nc-1">
-							<input type="radio" name="send_nc" id="send_nc-1" value="1" disabled="disabled" checked="checked">
-							1NC
-						</label>
-						<label for="send_nc-2">
-							<input type="radio" name="send_nc" id="send_nc-2" value="2" disabled="disabled">
-							2NC
-						</label>
-					</dd>
-					<dt>チャンネル</dt>
-					<dd>
-						<select id="send_channel" disabled="disabled"></select>
-					</dd>
-					<dt>コメント</dt>
-					<dd>
-						<textarea id="send_comment" rows="10" disabled="disabled"></textarea>
-					</dd>
-				</dl>
-				<div id="exec_send_nc_wrapper">
-					<button id="exec_send_nc" class="disabled" disabled="disabled">プレゼント</button>
-				</div>
-			</section>
-			
-			<section id="send_nc_history_section">
-				<h2>
-					今月のプレゼント状況
-					<span id="total_send_nc_wrapper">
-						(合計：<span id="total_send_nc"></span>NC)
-					</span>
-				</h2>
-				<div id="send_nc_history">
-					<div id="send_nc_history_header">
-						<div>
-							<div>日時</div>
-							<div>チャンネル</div>
-							<div>送り先</div>
-							<div>NC</div>
-							<div>コメント</div>
-						</div>
-					</div>
-					<div id="send_nc_history_list"></div>
-					<div id="send_nc_history_no_data">
-						<p>
-							今月はまだプレゼントしていません。<br />
-						</p>
-					</div>
-				</div>
-				<div id="loading_send_nc_history">
-					<i class="fas fa-circle-notch fa-spin"></i>
-				</div>
-			</section>
-		</main>
+  <head>
+    <title><%= subTitle %>｜<%= title %></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet/less" type="text/css" href="/stylesheets/styles.less" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body id="page_send_nc">
+    <header>
+      <h1><%= title %></h1>
+    </header>
+    <main>
+      <section id="send_nc_form_section">
+        <h2><%= subTitle %></h2>
+        <dl id="send_nc_form">
+          <dt>送り主</dt>
+          <dd>
+            <div id="self_user_name_wrapper">
+              <span id="self_user_name"></span>
+              さん
+            </div>
+          </dd>
+          <dt>送り先</dt>
+          <dd id="send_user_name_wrapper">
+            <input type="text" id="send_user_name" disabled="disabled" />
+            さん
+            <ul id="send_user_list"></ul>
+          </dd>
 
-		<div id="modal_background-confirm" class="modal-confirm"></div>
-		<div id="confirm_wrapper" class="modal-confirm">
-			<div id="required_login">
-				<p>本機能を使用するにはSlackへのログインが必要です。</p>
-				<a href="https://slack.com/oauth/authorize?scope=identity.basic&client_id=3771369621.974344820646">
-					<img alt="Sign in with Slack" src="https://platform.slack-edge.com/img/sign_in_with_slack.png" srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x">
-				</a>
-			</div>
-			<div id="confirm_exec_send_nc">
-				<p>
-					<span id="confirm_send_user_name"></span> さんに <span id="confirm_send_nc"></span>NC プレゼントします。<br>
-					メッセージは <span id="confirm_send_channel"></span> に投稿されます。<br>
-					よろしいですか？
-				</p>
-				<div>
-					<button id="confirm_exec_send_nc-ok">OK</button>
-					<button id="confirm_exec_send_nc-ng">キャンセル</button>
-				</div>
-			</div>
-		</div>
+          <dt>NC数</dt>
+          <dd>
+            <label for="send_nc-1">
+              <input
+                type="radio"
+                name="send_nc"
+                id="send_nc-1"
+                value="1"
+                disabled="disabled"
+                checked="checked"
+              />
+              1NC
+            </label>
+            <label for="send_nc-2">
+              <input type="radio" name="send_nc" id="send_nc-2" value="2" disabled="disabled" />
+              2NC
+            </label>
+          </dd>
+          <dt>チャンネル</dt>
+          <dd>
+            <select id="send_channel" disabled="disabled"></select>
+          </dd>
+          <dt>コメント</dt>
+          <dd>
+            <textarea id="send_comment" rows="10" disabled="disabled"></textarea>
+          </dd>
+        </dl>
+        <div id="exec_send_nc_wrapper">
+          <button id="exec_send_nc" class="disabled" disabled="disabled">
+            プレゼント
+          </button>
+        </div>
+      </section>
 
-		<div id="modal_background-loading" class="modal-loading"></div>
-		<div id="loading_wrapper" class="modal-loading">
-			<i class="fas fa-circle-notch fa-spin"></i>
-		</div>
+      <section id="send_nc_history_section">
+        <h2>
+          今月のプレゼント状況
+          <span id="total_send_nc_wrapper"> (合計：<span id="total_send_nc"></span>NC) </span>
+        </h2>
+        <div id="send_nc_history">
+          <div id="send_nc_history_header">
+            <div>
+              <div>日時</div>
+              <div>チャンネル</div>
+              <div>送り先</div>
+              <div>NC</div>
+              <div>コメント</div>
+            </div>
+          </div>
+          <div id="send_nc_history_list"></div>
+          <div id="send_nc_history_no_data">
+            <p>今月はまだプレゼントしていません。<br /></p>
+          </div>
+        </div>
+        <div id="loading_send_nc_history">
+          <i class="fas fa-circle-notch fa-spin"></i>
+        </div>
+      </section>
+    </main>
 
-		<script src="javascripts/index.js"></script>
-	</body>
+    <div id="modal_background-confirm" class="modal-confirm"></div>
+    <div id="confirm_wrapper" class="modal-confirm">
+      <div id="required_login">
+        <p>本機能を使用するにはSlackへのログインが必要です。</p>
+        <a
+          href="https://slack.com/oauth/v2/authorize?client_id=3771369621.1035691198486&user_scope=channels:read,chat:write,users:read,channels:history"
+        >
+          <img
+            alt="Add to Slack"
+            height="40"
+            width="139"
+            src="https://platform.slack-edge.com/img/add_to_slack.png"
+            srcset="
+              https://platform.slack-edge.com/img/add_to_slack.png    1x,
+              https://platform.slack-edge.com/img/add_to_slack@2x.png 2x
+            "
+          />
+        </a>
+      </div>
+      <div id="confirm_exec_send_nc">
+        <p>
+          <span id="confirm_send_user_name"></span> さんに <span id="confirm_send_nc"></span>NC
+          プレゼントします。<br />
+          メッセージは
+          <span id="confirm_send_channel"></span> に投稿されます。<br />
+          よろしいですか？
+        </p>
+        <div>
+          <button id="confirm_exec_send_nc-ok">OK</button>
+          <button id="confirm_exec_send_nc-ng">キャンセル</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal_background-loading" class="modal-loading"></div>
+    <div id="loading_wrapper" class="modal-loading">
+      <i class="fas fa-circle-notch fa-spin"></i>
+    </div>
+
+    <script src="javascripts/index.js"></script>
+  </body>
 </html>
